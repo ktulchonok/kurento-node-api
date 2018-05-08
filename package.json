@@ -1,0 +1,18 @@
+{
+  "name": "kurento-node-api",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "server": "node main.js",
+    "start": "./node_modules/.bin/nodemon --watch server/ --exec node main.js"
+  },
+  "dependencies": {
+    "express": "~4.12.4",
+    "kurento-client": "https://github.com/Kurento/kurento-client-js#master",
+    "lodash": "^4.17.4",
+    "nodemon": "^1.11.0",
+    "uuid": "^3.1.0",
+    "webpack": "^3.4.1",
+    "ws": "~1.0.1"
+  }
+}
