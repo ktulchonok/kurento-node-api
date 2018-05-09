@@ -17,3 +17,5 @@ const server = https.createServer(options, app).listen(3001, function (err) {
   err && console.log(err)
   console.log('Kurento App. started');
 });
+
+enableSignaling(server);

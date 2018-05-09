@@ -35,10 +35,10 @@ class RecorderHandler extends BaseHandler {
           // fs.unlink(url.parse(client.recorder.getUri()).path, _.noop);
         });
         client.recorder.release();
-        // fs.createReadStream('/tmp/rec.webm').pipe(fs.createWriteStream('static/rec.webm'));
-        // setTimeout(() => {
-        //   fs.unlink('static/rec.webm');
-        // }, 5000)
+        fs.createReadStream('/tmp/rec.webm').pipe(fs.createWriteStream('static/rec.webm'));
+        setTimeout(() => {
+          fs.unlink('static/rec.webm');
+        }, 5000)
       }
     }
   }
