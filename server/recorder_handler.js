@@ -2,12 +2,14 @@ const BaseHandler = require('./base_handler');
 const _ = require('lodash');
 const fs = require('fs');
 const url = require('url');
+const recUri = `file:///tmp/rec.webm`;
 
 class RecorderHandler extends BaseHandler {
 
   constructor(kurentoClient, id) {
     super(kurentoClient, id);
   }
+
 
   addClient(id, params, channel) {
     console.log('addClient');
@@ -33,8 +35,25 @@ class RecorderHandler extends BaseHandler {
           // fs.unlink(url.parse(client.recorder.getUri()).path, _.noop);
         });
         client.recorder.release();
+        // fs.createReadStream('/tmp/rec.webm').pipe(fs.createWriteStream('static/rec.webm'));
+        // setTimeout(() => {
+        //   fs.unlink('static/rec.webm');
+        // }, 5000)
       }
     }
+  }
+
+  stopRec(id) {
+    let client = _.find(this.clients, {
+      id
+    });
+    if (client) {
+      client.recorder.release();
+        fs.createReadStream('/tmp/rec.webm').pipe(fs.createWriteStream('static/rec.webm'));
+        setTimeout(() => {
+          fs.unlink('static/rec.webm');
+        }, 5000)
+    }    
   }
 
   async connect() {
@@ -42,9 +61,8 @@ class RecorderHandler extends BaseHandler {
     let [client] = this.clients;
     try {
       let rtc = client.endpoint;
-
       let rec = await this.pipeline.create('RecorderEndpoint', {
-        uri: `file:///tmp/rec.webm`,
+        uri: recUri,
         stopOnEndOfStream: true,
         mediaProfile: 'WEBM'
       });
@@ -68,7 +86,7 @@ class RecorderHandler extends BaseHandler {
       // await rtc.connect(webRtc);
       // await player.play();
       // client.player = player;
-  
+
       console.log('Connected!');
 
     } catch (error) {

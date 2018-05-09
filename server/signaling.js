@@ -6,25 +6,25 @@ const uuidv4 = require('uuid/v4');
 const OneToOneHandler = require('./one_to_one_handler');
 const RecorderHandler = require('./recorder_handler');
 
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+//process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
-const kurentoUrl = process.env.KURENTO_URL || 'wss://159.89.96.110:8433/kurento';
+const kurentoUrl = process.env.KURENTO_URL || 'ws://localhost:8888/kurento';
 let kurentoClient = null;
 
 getKurentoClient();
 
 const AVAILABLE_HANDLERS = {
-  'one-to-one' : OneToOneHandler,
-  'recorder' : RecorderHandler,
+  'one-to-one': OneToOneHandler,
+  'recorder': RecorderHandler,
 };
 
 const sessions = {};
-for(var handler in AVAILABLE_HANDLERS) {
+for (var handler in AVAILABLE_HANDLERS) {
   sessions[handler] = {};
 }
 
 function stop(ws) {
-  if(ws.readyState === WebSocket.OPEN) {
+  if (ws.readyState === WebSocket.OPEN) {
     ws.close();
   }
 }
@@ -35,7 +35,7 @@ function stopWithError(ws, error) {
 }
 
 async function getKurentoClient() {
-  if(kurentoClient === null) {
+  if (kurentoClient === null) {
     kurentoClient = await Kurento(kurentoUrl);
     console.log('Connected to Kurento');
   }
@@ -53,18 +53,18 @@ function enableSignaling(server, kurentoServer) {
     // /:handlerName/:id[/params...]
     let urlSegments = parsedUrl.pathname.split('/').filter(s => s.length);
     urlSegments.shift(); // Drop /ws
-    if(urlSegments.length > 1) {
+    if (urlSegments.length > 1) {
       let handlerName = urlSegments.shift();
       let sessionId = urlSegments.shift();
       let handler = AVAILABLE_HANDLERS[handlerName];
-      if(handler === undefined) {
+      if (handler === undefined) {
         console.error(`Unknown handler ${handlerName}`);
         ws.close();
         return
       }
       let session = sessions[handlerName][sessionId];
 
-      if(!session) {
+      if (!session) {
         session = new handler(await getKurentoClient(kurentoUrl), sessionId);
         await session.init();
         session.on('shutdown', () => {
@@ -80,7 +80,7 @@ function enableSignaling(server, kurentoServer) {
         ws.send(JSON.stringify(message));
       });
 
-      if(!addSuccess) {
+      if (!addSuccess) {
         stopWithError(ws, `Participant limit reached for session of type ${handlerName}`);
         return;
       }
@@ -97,13 +97,13 @@ function enableSignaling(server, kurentoServer) {
 
       ws.on('message', _message => {
         let message = JSON.parse(_message);
-        if (message === 'stop') {
-
+        if (message.action === 'stop') {
+          session.stopRec(clientId);
         }
         console.log('RECV', message.action)
-        if(message.action === 'iceCandidate') {
+        if (message.action === 'iceCandidate') {
           session.addIceCandidate(clientId, message.candidate);
-        } else if(message.action === 'offer') {
+        } else if (message.action === 'offer') {
           session.receiveOffer(clientId, message.offer);
         } else {
           session.removeClient(clientId);
@@ -116,4 +116,7 @@ function enableSignaling(server, kurentoServer) {
   });
 }
 
-module.exports = {AVAILABLE_HANDLERS, enableSignaling};
+module.exports = {
+  AVAILABLE_HANDLERS,
+  enableSignaling
+};
