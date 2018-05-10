@@ -7,8 +7,9 @@ const enableSignaling = require('./server/signaling').enableSignaling;
 const app = express();
 
 const options = {
-  key: fs.readFileSync('keys/app_key.pem'),
-  cert: fs.readFileSync('keys/app_cert.pem')
+  key: fs.readFileSync('keys/private.key'),
+  cert: fs.readFileSync('keys/certificate.crt'),
+  ca: fs.readFileSync('keys/ca_bundle.crt')
 };
 
 app.use(express.static(path.join(__dirname, 'static')));
