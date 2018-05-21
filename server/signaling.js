@@ -5,10 +5,9 @@ const uuidv4 = require('uuid/v4');
 
 const OneToOneHandler = require('./one_to_one_handler');
 const RecorderHandler = require('./recorder_handler');
+const PlayerHandler = require('./player_handler');
 
-//process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
-
-const kurentoUrl = process.env.KURENTO_URL || 'ws://localhost:8888/kurento';
+const kurentoUrl = process.env.KURENTO_URL || 'ws://kurento.do-it.co:8888/kurento';
 let kurentoClient = null;
 
 getKurentoClient();
@@ -16,6 +15,7 @@ getKurentoClient();
 const AVAILABLE_HANDLERS = {
   'one-to-one': OneToOneHandler,
   'recorder': RecorderHandler,
+  'player': PlayerHandler
 };
 
 const sessions = {};

@@ -1,10 +1,9 @@
 const BaseHandler = require('./base_handler');
 const _ = require('lodash');
-const fs = require('fs');
 const url = require('url');
 const recUri = `file:///tmp/rec.webm`;
 
-class RecorderHandler extends BaseHandler {
+class PlayerHandler extends BaseHandler {
 
   constructor(kurentoClient, id) {
     super(kurentoClient, id);
@@ -28,15 +27,8 @@ class RecorderHandler extends BaseHandler {
     });
     if (client) {
       this._removeClient(client);
-      if (client.recorder) {
-        client.recorder.stopAndWait().then(() => {
-          // fs.unlink(url.parse(client.recorder.getUri()).path, _.noop);
-        });
-        client.recorder.release();
-        fs.createReadStream('/tmp/rec.webm').pipe(fs.createWriteStream('static/rec.webm'));
-        // setTimeout(() => {
-        //   fs.unlink('static/rec.webm');
-        // }, 5000)
+      if (client.player) {
+        client.player.release();
       }
     }
   }
@@ -45,21 +37,20 @@ class RecorderHandler extends BaseHandler {
     const [client] = this.clients;
     try {
       const rtc = client.endpoint;
-      const rec = await this.pipeline.create('RecorderEndpoint', {
+      const player = await this.pipeline.create('PlayerEndpoint', {
         uri: recUri,
-        stopOnEndOfStream: true,
-        mediaProfile: 'WEBM'
-      });
+        // useEncodedMedia: false
+      })
 
-      await rtc.connect(rec);
-      await rec.record();
-      client.recorder = rec;
+      await player.connect(rtc);
+      await player.play();
+      client.player = player;
 
-      console.log('Recorder connected!');
+      console.log('Player connected!');
     } catch (error) {
       console.error(`Error connecting media workflow`, error);
     }
   }
 }
 
-module.exports = RecorderHandler;
+module.exports = PlayerHandler;
