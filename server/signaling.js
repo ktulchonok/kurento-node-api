@@ -4,6 +4,8 @@ const Kurento = require('kurento-client');
 const uuidv4 = require('uuid/v4');
 
 const OneToOneHandler = require('./one_to_one_handler');
+const FourWayHandler = require('./four_way_handler');
+const ConferenceHandler = require('./conference_handler');
 const RecorderHandler = require('./recorder_handler');
 const PlayerHandler = require('./player_handler');
 
@@ -14,6 +16,8 @@ getKurentoClient();
 
 const AVAILABLE_HANDLERS = {
   'one-to-one': OneToOneHandler,
+  'four-way': FourWayHandler,
+  'conference' : ConferenceHandler,
   'recorder': RecorderHandler,
   'player': PlayerHandler
 };

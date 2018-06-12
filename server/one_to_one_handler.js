@@ -11,7 +11,6 @@ class OneToOneHandler extends BaseHandler {
 
   addClient(id, params, channel) {
     let numClients = _.size(this.clients);
-    console.log('addClient', numClients);
     if (numClients === 2) {
       return false;
     } else {
