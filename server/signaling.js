@@ -51,8 +51,9 @@ function enableSignaling(server, kurentoServer) {
     server: server
   });
 
-  wss.on('connection', async (ws) => {
-    let parsedUrl = url.parse(ws.upgradeReq.url);
+  wss.on('connection', async (ws, req) => {
+    var upgradeReq = ws.upgradeReq || req;
+    let parsedUrl = url.parse(upgradeReq.url);
 
     // /:handlerName/:id[/params...]
     let urlSegments = parsedUrl.pathname.split('/').filter(s => s.length);
