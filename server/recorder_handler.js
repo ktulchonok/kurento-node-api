@@ -1,8 +1,8 @@
 const BaseHandler = require('./base_handler');
 const _ = require('lodash');
 const fs = require('fs');
-const url = require('url');
-const recUri = `file:///tmp/rec.webm`;
+// const url = require('url');
+// const recUri = `file:///tmp/rec.webm`;
 
 class RecorderHandler extends BaseHandler {
 
@@ -33,7 +33,7 @@ class RecorderHandler extends BaseHandler {
           // fs.unlink(url.parse(client.recorder.getUri()).path, _.noop);
         });
         client.recorder.release();
-        fs.createReadStream('/tmp/rec.webm').pipe(fs.createWriteStream('static/rec.webm'));
+        // fs.createReadStream('/tmp/rec.webm').pipe(fs.createWriteStream('static/rec.webm'));
         // setTimeout(() => {
         //   fs.unlink('static/rec.webm');
         // }, 5000)
@@ -46,7 +46,7 @@ class RecorderHandler extends BaseHandler {
     try {
       const rtc = client.endpoint;
       const rec = await this.pipeline.create('RecorderEndpoint', {
-        uri: recUri,
+        uri: `file:///tmp/rec-${client.id}.webm`,
         stopOnEndOfStream: true,
         mediaProfile: 'WEBM'
       });
