@@ -41,7 +41,7 @@ class RecorderHandler extends BaseHandler {
       const rtc = client.endpoint;
       const fileName = `${this.id}.webm`;
       const rec = await this.pipeline.create('RecorderEndpoint', {
-        uri: `file://${process.cwd()}/static/${fileName}`,
+        uri: `file:///tmp/kurento-video/${fileName}`,
         stopOnEndOfStream: true,
         mediaProfile: 'WEBM'
       });
