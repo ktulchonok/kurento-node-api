@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "express": "~4.12.4",
+    "handbrake-js": "^3.0.2",
     "kurento-client": "https://github.com/Kurento/kurento-client-js#master",
     "lodash": "^4.17.4",
     "nodemon": "^1.11.0",
