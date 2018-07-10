@@ -7,13 +7,13 @@
     "debug": "node --nolazy --inspect-brk=9229 main.js"
   },
   "dependencies": {
-    "express": "~4.12.4",
+    "express": "^4.16.3",
     "handbrake-js": "^3.0.2",
-    "kurento-client": "https://github.com/Kurento/kurento-client-js#master",
+    "kurento-client": "git+https://github.com/Kurento/kurento-client-js.git#master",
     "lodash": "^4.17.4",
-    "nodemon": "^1.11.0",
-    "uuid": "^3.1.0",
-    "webpack": "^3.4.1",
-    "ws": "~1.0.1"
+    "nodemon": "^1.17.5",
+    "uuid": "^3.3.2",
+    "webpack": "^3.12.0",
+    "ws": "^5.2.0"
   }
 }
