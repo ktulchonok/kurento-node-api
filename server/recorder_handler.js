@@ -32,7 +32,7 @@ class RecorderHandler extends BaseHandler {
   }
 
   uploadFile(fileName) {
-    const filePath = `/${videoDir}/${fileName}`;
+    const filePath = `${videoDir}/${fileName}`;
     fs.readFile(filePath, function (err, fileData) {
       if (err) return console.log(err);
 
@@ -60,13 +60,13 @@ class RecorderHandler extends BaseHandler {
       this._removeClient(client);
       if (client.recorder) {
         client.recorder.stopAndWait().then(() => {
-          // fs.unlink(url.parse(client.recorder.getUri()).path, _.noop);
+          this.uploadFile(`${videoID}.webm`);
         });
         client.recorder.release();
         const videoID = this.id;
         hbjs.spawn({
-            input: `/${videoDir}/${videoID}.webm`,
-            output: `/${videoDir}/${videoID}.mp4`
+            input: `${videoDir}/${videoID}.webm`,
+            output: `${videoDir}/${videoID}.mp4`
           })
           .on('error', err => {
             // invalid user input, no video found etc
@@ -84,7 +84,6 @@ class RecorderHandler extends BaseHandler {
             console.log('%s.mp4 complete!', videoID);
             this.uploadFile(`${videoID}.mp4`);
           })
-        this.uploadFile(`${videoID}.webm`);
       }
     }
   }
