@@ -12,8 +12,6 @@ const options = {
   ca: fs.readFileSync('keys/ca_bundle.crt')
 };
 
-app.use(express.static(path.normalize('/tmp/kurento-video')));
-
 const server = https.createServer(options, app).listen(3001, function (err) {
   err && console.log(err)
   console.log('Kurento App. started');

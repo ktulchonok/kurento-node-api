@@ -3,6 +3,8 @@ const _ = require('lodash');
 const fs = require('fs');
 const hbjs = require('handbrake-js');
 const AWS = require('aws-sdk');
+
+AWS.config.loadFromPath('./keys/configS3.json');
 const videoDir = '/tmp/kurento-video';
 const s3Bucket = new AWS.S3({
   params: {
@@ -30,7 +32,8 @@ class RecorderHandler extends BaseHandler {
   }
 
   uploadFile(fileName) {
-    fs.readFile(`/${videoDir}/${fileName}`, function (err, fileData) {
+    const filePath = `/${videoDir}/${fileName}`;
+    fs.readFile(filePath, function (err, fileData) {
       if (err) return console.log(err);
 
       let params = {
@@ -43,7 +46,8 @@ class RecorderHandler extends BaseHandler {
       s3Bucket.putObject(params, (error, data) => {
         if (error) return console.log(error);
 
-        console.log("Successfully uploaded %s", fileName)
+        console.log("Successfully uploaded %s", fileName);
+        fs.unlink(filePath);
       });
     });
   }
