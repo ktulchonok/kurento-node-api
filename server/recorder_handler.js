@@ -60,7 +60,6 @@ class RecorderHandler extends BaseHandler {
       this._removeClient(client);
       if (client.recorder) {
         client.recorder.stopAndWait().then(() => {
-          this.uploadFile(`${videoID}.webm`);
         });
         client.recorder.release();
         const videoID = this.id;
@@ -70,7 +69,7 @@ class RecorderHandler extends BaseHandler {
           })
           .on('error', err => {
             // invalid user input, no video found etc
-            console.error('%s.mp4 \nConverter error: ', err)
+            console.error('%s.mp4 \nConverter error: ', videoID, err)
           })
           .on('progress', progress => {
             console.log(
@@ -82,6 +81,7 @@ class RecorderHandler extends BaseHandler {
           })
           .on('complete', () => {
             console.log('%s.mp4 complete!', videoID);
+            this.uploadFile(`${videoID}.webm`);
             this.uploadFile(`${videoID}.mp4`);
           })
       }
